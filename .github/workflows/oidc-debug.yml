@@ -13,20 +13,18 @@ jobs:
 
     steps:
       - name: Inspect OIDC token claims
-        env:
-          OIDC_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
-          OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
         run: |
           echo "Requesting GitHub OIDC token..."
 
           RESPONSE=$(curl -sS \
-            -H "Authorization: bearer $OIDC_TOKEN" \
-            "$OIDC_URL&audience=sts.amazonaws.com")
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com")
 
           TOKEN=$(echo "$RESPONSE" | jq -r '.value')
 
           if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
             echo "Failed to obtain OIDC token"
+            echo "$RESPONSE"
             exit 1
           fi
 
@@ -35,7 +33,6 @@ jobs:
 
           PAYLOAD=$(echo "$TOKEN" | cut -d '.' -f 2)
 
-          # Add padding required by base64 decoding
           case $((${#PAYLOAD} % 4)) in
             2) PAYLOAD="${PAYLOAD}==" ;;
             3) PAYLOAD="${PAYLOAD}=" ;;
