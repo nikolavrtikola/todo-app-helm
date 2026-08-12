@@ -8,19 +8,11 @@ data "aws_caller_identity" "current" {}
 # GitHub OIDC provider
 # --------------------------------------------------
 
-data "tls_certificate" "github" {
-  url = "https://token.actions.githubusercontent.com"
-}
-
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 
   client_id_list = [
     "sts.amazonaws.com"
-  ]
-
-  thumbprint_list = [
-    data.tls_certificate.github.certificates[0].sha1_fingerprint
   ]
 }
 
@@ -54,12 +46,12 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
     }
 
     condition {
-    test     = "StringLike"
-    variable = "token.actions.githubusercontent.com:sub"
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
 
-    values = [
+      values = [
         "repo:${var.github_owner}@4114230/${var.github_repo}@1331792245:ref:refs/heads/main"
-    ]
+      ]
     }
   }
 }
