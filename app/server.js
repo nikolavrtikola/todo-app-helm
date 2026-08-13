@@ -132,7 +132,7 @@ async function start() {
         await initializeDatabase();
 
         app.listen(PORT, () => {
-            console.log(`Todo API listening on port ${PORT}`);
+            console.log(`Todo API is listening... on port ${PORT}`);
         });
     } catch (error) {
         console.error("Failed to start application:", error);
