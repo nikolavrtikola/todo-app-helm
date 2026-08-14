@@ -1,0 +1,19 @@
+Todo application has been deployed.
+
+Release:
+  {{ .Release.Name }}
+
+Namespace:
+  {{ .Release.Namespace }}
+
+Check the pods:
+
+  kubectl get pods
+
+Check the services:
+
+  kubectl get services
+
+Open the application:
+
+  minikube service {{ .Release.Name }}-todo

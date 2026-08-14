@@ -1,0 +1,36 @@
+replicaCount: 1
+
+image:
+  repository: todo-api
+  tag: "1.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 3000
+  nodePort: 30080
+
+database:
+  host: postgres
+  port: 5432
+  name: todos
+  user: todo
+  password: todo
+
+postgres:
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+    
+  storage:
+    size: 1Gi
+    storageClass: gp2
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
